@@ -30,6 +30,7 @@ class ProductoController extends Controller
     public function create()
     {
         //
+        return view('productos.create');
     }
 
     /**
@@ -41,6 +42,21 @@ class ProductoController extends Controller
     public function store(Request $request)
     {
         //
+        /*
+        $datos = Producto::create( $request->all() );
+        return redirect()->route('productos.edit', $datos->id)->with('lblmensaje', 'Producto ingresado OK');
+        */
+
+        $datos = Producto::create(
+            [
+                'nombre' => $request->txtnombre,
+                'precio' => $request->txtprecio
+            ]
+        );
+
+        return redirect()->route('productos.edit', $datos->id)->with('lblmensaje', 'Producto ingresado OK');     
+
+
     }
 
     /**
@@ -79,15 +95,22 @@ class ProductoController extends Controller
     public function update(Request $request, $id)
     {
         //
+        /*
         $datos = Producto::find($id);
 
         $datos->fill( $request->all() )->save();
 
         return redirect()->route('productos.edit', $datos->id );//->with('lblmensaje', 'Producto actualizado OK');
+        */
 
         //QUEDAMOS POR AQUI, MUESTRA ERROR AL INETNATR ACTUALIZAR 
         //TODOS LOS DATOS DE LOS PRODUCTOS
-      
+        $datos = Producto::find($id);
+        $datos->nombre = $request->input('txtnombre');
+        $datos->precio = $request->input('txtprecio');   
+        $datos->save();  
+        return redirect()->route('productos.edit', $datos->id )->with('lblmensaje', 'Producto actualizado OK con ID = ' . $datos->id);
+
     }
 
     /**
@@ -99,5 +122,24 @@ class ProductoController extends Controller
     public function destroy($id)
     {
         //
+        /*
+        $respuesta = Producto::findOrFail($id)->delete();
+        dd($respuesta);
+        findOrFail(1)->delete();
+        */
+
+        $pro = Producto::find($id);
+        if( $pro ){
+            $pro->delete();
+            return back()->with('lblmensaje', 'Producto con ID = ' . $id . ' eliminado OK');
+        }
+
+        /*
+        $lista = Producto::orderBy('id')->simplePaginate(10);
+        return view('productos.index', compact('lista') );        
+        */
+        
+        //$respuesta = Producto::find($id)->delete();        
+        
     }
 }

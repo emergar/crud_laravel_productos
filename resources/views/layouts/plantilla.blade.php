@@ -34,6 +34,18 @@
   </div>
 </nav>
 
+@if(session('lblmensaje') )
+    <div class="container mt-1">
+      <div class="row">
+        <div class="col-md-8 offset-md-2">
+          <div class="alert alert-success">
+              {{ session('lblmensaje') }}  
+          </div>          
+        </div>
+      </div>      
+    </div>
+@endif
+
 @yield('contenido')
 
 
